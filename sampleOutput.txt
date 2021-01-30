@@ -1,0 +1,8 @@
+READ TRACK INFORMATION[#4]:
+ Track State:           incomplete incremental
+ Track Start Address:   34816*2KB
+ Next Writable Address: 173936*2KB
+ Free Blocks:           542256*2KB
+ Track Size:            681376*2KB
+ Last Recorded Address: 173919*2KB
+READ CAPACITY:          0*2048=0

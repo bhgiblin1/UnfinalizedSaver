@@ -14,8 +14,7 @@ public class GUIKickoff extends Application
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("scene.fxml"));
 
         Scene scene = new Scene(root);
-
-        stage.setTitle("JavaFX and Gradle");
+        stage.setTitle("Unfinalized Saver");
         stage.setScene(scene);
         stage.show();
     }

@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# (173919*2048)-(34816*2048)
+# Sample output
+# READ TRACK INFORMATION[#4]:
+#  Track State:           incomplete incremental
+#  Track Start Address:   34816*2KB
+#  Next Writable Address: 173936*2KB
+#  Free Blocks:           542256*2KB
+#  Track Size:            681376*2KB
+#  Last Recorded Address: 173919*2KB
+# READ CAPACITY:          0*2048=0
+
+function verifyCompatible {
+	returnCode=1
+  #dvd+rw-mediainfo /dev/sr1 | grep -A 7 "\[#4\]"
+  trackInfo=$(cat sampleOutput.txt)
+  startAddress=$(echo "$trackInfo" | awk -F':|*' 'NR==3 {print $2}')
+  trackSize=$(echo "$trackInfo" | awk -F':|*' 'NR==6 {print $2}')
+  lastRecordedAddress=$(echo "$trackInfo" | awk -F':|*' 'NR==7 {print $2}')
+
+  if [ $startAddress -eq $1 ] && [ $trackSize -eq $2 ]; then
+      returnCode=0
+  else
+      echo "Unknown DVD format"
+  fi
+
+  return $returnCode
+}
+
+returnCode=0
+while [ -n "$1" ]; do
+	case $1 in
+		--verify)
+			verifyCompatible $2 $3
+			returnCode=$?
+			shift
+			shift
+			;;
+	esac
+	shift
+done
+
+exit $returnCode
+
+
+let bytesToRead="($lastRecordedAddress * 2048) - ($startAddress * 2048)"
+echo $bytesToRead

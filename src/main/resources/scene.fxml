@@ -1,16 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="UnfinalizedSaver"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane prefHeight="461.0" prefWidth="691.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnfinalizedSaver.UnfinalizedSaver">
     <children>
-        <Label fx:id="label" text="Label" />
+      <Label layoutX="42.0" layoutY="56.0" prefHeight="35.0" prefWidth="148.0" text="Block Device:">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Label>
+      <Label layoutX="205.0" layoutY="14.0" text="Unfinalized Saver">
+         <font>
+            <Font name="Consolas" size="30.0" />
+         </font>
+      </Label>
+      <TextField fx:id="device" layoutX="69.0" layoutY="96.0" prefHeight="33.0" prefWidth="94.0" text="/dev/sr1">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </TextField>
+      <Label layoutX="414.0" layoutY="56.0" prefHeight="35.0" prefWidth="166.0" text="Save Location:">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Label>
+      <TextField fx:id="saveLoc" layoutX="476.0" layoutY="96.0" prefHeight="28.0" prefWidth="191.0" text="/dev/shm">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </TextField>
+      <Button fx:id="fileExplorerBtn" layoutX="346.0" layoutY="96.0" mnemonicParsing="false" onAction="#launchFileExplorer" prefHeight="33.0" prefWidth="116.0" text="File Explorer">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <ProgressIndicator layoutX="52.0" layoutY="185.0" prefHeight="163.0" prefWidth="154.0" progress="0.0" AnchorPane.bottomAnchor="113.0" AnchorPane.leftAnchor="52.0" AnchorPane.rightAnchor="485.0" AnchorPane.topAnchor="185.0" />
+      <Label layoutX="42.0" layoutY="361.0" text="Verifying Disk Volumes ">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <ProgressIndicator layoutX="276.0" layoutY="185.0" prefHeight="163.0" prefWidth="154.0" progress="0.0" AnchorPane.bottomAnchor="113.0" AnchorPane.leftAnchor="276.0" AnchorPane.rightAnchor="261.0" AnchorPane.topAnchor="185.0" />
+      <ProgressIndicator layoutX="494.0" layoutY="185.0" prefHeight="163.0" prefWidth="154.0" progress="0.0" AnchorPane.bottomAnchor="113.0" AnchorPane.leftAnchor="494.0" AnchorPane.rightAnchor="43.0" AnchorPane.topAnchor="185.0" />
+      <Label layoutX="297.0" layoutY="361.0" text="Copying Data">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="497.0" layoutY="361.0" text="Converting to MP4">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Button fx:id="beginBtn" layoutX="587.0" layoutY="414.0" mnemonicParsing="false" onAction="#begin" prefHeight="33.0" prefWidth="74.0" text="Begin">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
     </children>
 </AnchorPane>
