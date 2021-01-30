@@ -17,7 +17,6 @@ function verifyCompatible {
   trackInfo=$(cat sampleOutput.txt)
   startAddress=$(echo "$trackInfo" | awk -F':|*' 'NR==3 {print $2}')
   trackSize=$(echo "$trackInfo" | awk -F':|*' 'NR==6 {print $2}')
-  lastRecordedAddress=$(echo "$trackInfo" | awk -F':|*' 'NR==7 {print $2}')
 
   if [ $startAddress -eq $1 ] && [ $trackSize -eq $2 ]; then
       returnCode=0
@@ -26,6 +25,16 @@ function verifyCompatible {
   fi
 
   return $returnCode
+}
+
+function byteCount {
+    #dvd+rw-mediainfo /dev/sr1 | grep -A 7 "\[#4\]"
+  trackInfo=$(cat sampleOutput.txt)
+  startAddress=$(echo "$trackInfo" | awk -F':|*' 'NR==3 {print $2}')
+  lastRecordedAddress=$(echo "$trackInfo" | awk -F':|*' 'NR==7 {print $2}')
+
+  let bytesToRead="($lastRecordedAddress * 2048) - ($startAddress * 2048)"
+  echo $bytesToRead
 }
 
 returnCode=0
@@ -37,6 +46,9 @@ while [ -n "$1" ]; do
 			shift
 			shift
 			;;
+	  --bytecount)
+	    byteCount
+	    ;;
 	esac
 	shift
 done
@@ -44,5 +56,3 @@ done
 exit $returnCode
 
 
-let bytesToRead="($lastRecordedAddress * 2048) - ($startAddress * 2048)"
-echo $bytesToRead

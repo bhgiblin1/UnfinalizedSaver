@@ -39,7 +39,7 @@
             <Font size="14.0" />
          </font>
       </Button>
-      <ProgressIndicator layoutX="52.0" layoutY="185.0" prefHeight="163.0" prefWidth="154.0" progress="0.0" AnchorPane.bottomAnchor="113.0" AnchorPane.leftAnchor="52.0" AnchorPane.rightAnchor="485.0" AnchorPane.topAnchor="185.0" />
+      <ProgressIndicator fx:id="verifyProgressInd" layoutX="52.0" layoutY="185.0" prefHeight="163.0" prefWidth="154.0" progress="0.0" AnchorPane.bottomAnchor="113.0" AnchorPane.leftAnchor="52.0" AnchorPane.rightAnchor="485.0" AnchorPane.topAnchor="185.0" />
       <Label layoutX="42.0" layoutY="361.0" text="Verifying Disk Volumes ">
          <font>
             <Font size="16.0" />
