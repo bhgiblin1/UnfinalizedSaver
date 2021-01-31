@@ -1,7 +1,11 @@
 package UnfinalizedSaver;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
@@ -9,7 +13,6 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadFactory;
 
 public class UnfinalizedSaver
 {
@@ -56,16 +59,36 @@ public class UnfinalizedSaver
             stage.setProgress(0);
         dvdHandler = new DVDHandler();
         dvdHandler.getStageCompletePercent().addListener(((observable, oldValue, newValue) -> updateProgress(newValue.doubleValue())));
-        try
-        {
-            // TODO make this task
-            new Thread(() -> dvdHandler.begin()).start();
-        }
-        catch (RuntimeException e)
-        {
-            System.out.println("FAIL");
-            System.out.println(e.getMessage());
-        }
+
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() {
+                try {
+                    dvdHandler.begin();
+                }
+                catch (RuntimeException e)
+                {
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error");
+                        alert.setHeaderText("Failed to copy DVD");
+                        alert.setContentText(e.getMessage());
+                        alert.showAndWait();
+                    });
+                    // make sure setOnSucceeded is not called
+                    throw new RuntimeException();
+                }
+                return null;
+            }
+        };
+        task.setOnSucceeded(event -> displayMedia(dvdHandler));
+
+        new Thread(task).start();
+    }
+
+    private void displayMedia(DVDHandler dvdHandler)
+    {
+        System.out.println("displaying media");
     }
 
     public void updateProgress(double value)

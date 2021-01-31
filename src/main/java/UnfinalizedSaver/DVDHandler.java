@@ -34,25 +34,32 @@ public class DVDHandler
     public void verifyCompatibleDVD() throws RuntimeException
     {
         completePercent.set(.25);
-        execute("/share/UnfinalizedSaver/executor.bsh --verify " + trackStartAddress + " " + trackSize, false);
+        execute("/share/UnfinalizedSaver/executor.bsh --verify " + trackStartAddress + " " + trackSize,
+                false, false);
         completePercent.set(.50);
     }
 
     public void copyDVD() throws RuntimeException
     {
-        executeDD("/share/UnfinalizedSaver/executor.bsh --copy " + trackStartAddress + " " + trackSize
-                + " /dev/sr1 " + vobFile);
+        execute("/share/UnfinalizedSaver/executor.bsh --copy " + trackStartAddress + " " + trackSize
+                + " /dev/sr1 " + vobFile, true, false);
     }
 
     private void getByteCount() throws RuntimeException
     {
         completePercent.set(.75);
-        String output = execute("/share/UnfinalizedSaver/executor.bsh --bytecount", false);
+        String output = execute("/share/UnfinalizedSaver/executor.bsh --bytecount", false, false);
         byteCount = Long.parseLong(output);
-        System.out.println("Byte count = " + byteCount);
+//        System.out.println("Byte count = " + byteCount);
         if (byteCount <= 0)
             throw new RuntimeException("Invalid byteCount =" + byteCount);
         completePercent.set(1);
+    }
+
+    private void convertVOB()
+    {
+        execute("/share/UnfinalizedSaver/executor.bsh --convert " + vobFile + " " + mp4File,
+                false,true);
     }
 
     public void begin()
@@ -65,33 +72,38 @@ public class DVDHandler
         convertVOB();
     }
 
-    private void convertVOB()
-    {
-        execute("/share/UnfinalizedSaver/executor.bsh --convert " + vobFile + " " + mp4File, true);
-    }
-
-    private String execute(String command, boolean vobConvert)
+    private String execute(String command, boolean ddCommand, boolean handbrakeCommand)
     {
         StringBuilder stringBuilder = new StringBuilder();
         try
         {
             Process process = Runtime.getRuntime().exec(command);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader bufferedReader;
+
+            // dd writes to stderr
+            if (ddCommand)
+                bufferedReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            else
+                bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
             String line;
             while ((line = bufferedReader.readLine()) != null)
             {
-                if (vobConvert)
+                if (handbrakeCommand)
                 {
-                    System.out.println(line);
                     var output = line.split(" ");
                     if (output.length > 6)
                         updateVOBPercent(line.split(" ")[5]);
+                }
+                else if (ddCommand)
+                {
+                    updateDDPercent(line.split(" ")[0]);
                 }
                 else
                 {
                     stringBuilder.append(line);
                 }
-//                System.out.println(line);
+//               System.out.println(line);
             }
             process.waitFor();
             if (process.exitValue() != 0)
@@ -102,26 +114,6 @@ public class DVDHandler
             e.printStackTrace();
         }
         return stringBuilder.toString();
-    }
-
-    private void executeDD(String command)
-    {
-        try
-        {
-            Process process = Runtime.getRuntime().exec(command);
-            // dd writes to stderr
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            String line;
-            while ((line = bufferedReader.readLine()) != null)
-            {
-                updateDDPercent(line.split(" ")[0]);
-            }
-            process.waitFor();
-            if (process.exitValue() != 0)
-                throw new RuntimeException();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     private void updateDDPercent(String bytesCopiedStr)
