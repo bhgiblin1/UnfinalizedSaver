@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="461.0" prefWidth="691.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnfinalizedSaver.UnfinalizedSaver">
@@ -40,19 +41,19 @@
          </font>
       </Button>
       <ProgressIndicator fx:id="verifyProgressInd" layoutX="52.0" layoutY="185.0" prefHeight="163.0" prefWidth="154.0" progress="0.0" AnchorPane.bottomAnchor="113.0" AnchorPane.leftAnchor="52.0" AnchorPane.rightAnchor="485.0" AnchorPane.topAnchor="185.0" />
-      <Label layoutX="42.0" layoutY="361.0" text="Verifying Disk Volumes ">
+      <Label layoutX="34.0" layoutY="361.0" text="Verifying Disk Volumes ">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
       <ProgressIndicator fx:id="copyProgressInd" layoutX="276.0" layoutY="185.0" prefHeight="163.0" prefWidth="154.0" progress="0.0" AnchorPane.bottomAnchor="113.0" AnchorPane.leftAnchor="276.0" AnchorPane.rightAnchor="261.0" AnchorPane.topAnchor="185.0" />
       <ProgressIndicator fx:id="convertProgressInd" layoutX="494.0" layoutY="185.0" prefHeight="163.0" prefWidth="154.0" progress="0.0" AnchorPane.bottomAnchor="113.0" AnchorPane.leftAnchor="494.0" AnchorPane.rightAnchor="43.0" AnchorPane.topAnchor="185.0" />
-      <Label layoutX="297.0" layoutY="361.0" text="Copying Data">
+      <Label layoutX="299.0" layoutY="361.0" text="Copying Data">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="497.0" layoutY="361.0" text="Converting to MP4">
+      <Label layoutX="498.0" layoutY="361.0" text="Converting to MP4">
          <font>
             <Font size="16.0" />
          </font>
@@ -62,5 +63,11 @@
             <Font size="16.0" />
          </font>
       </Button>
+      <Line endX="-53.0" endY="-0.5" layoutX="319.0" layoutY="267.0" startX="-106.0" startY="-0.5" strokeWidth="2.0" />
+      <Line endX="-62.5" endY="-10.0" layoutX="329.0" layoutY="277.0" startX="-74.0" startY="4.0" strokeWidth="2.0" />
+      <Line endX="-62.5" endY="-10.0" layoutX="328.0" layoutY="263.0" rotate="93.8" startX="-74.0" startY="4.0" strokeWidth="2.0" />
+      <Line endX="-53.0" endY="-0.5" layoutX="541.0" layoutY="267.0" startX="-106.0" startY="-0.5" strokeWidth="2.0" />
+      <Line endX="-62.5" endY="-10.0" layoutX="551.0" layoutY="277.0" startX="-74.0" startY="4.0" strokeWidth="2.0" />
+      <Line endX="-62.5" endY="-10.0" layoutX="550.0" layoutY="263.0" rotate="93.8" startX="-74.0" startY="4.0" strokeWidth="2.0" />
     </children>
 </AnchorPane>
