@@ -37,17 +37,25 @@ function byteCount {
   echo $bytesToRead
 }
 
+function copy {
+  #dd bs=2048 skip=$1 count=$2 if=$3 of=$4
+  dd if=/root/dvds/dvd1/track4.vob of=/dev/null bs=1 status=progress
+}
+
 returnCode=0
 while [ -n "$1" ]; do
 	case $1 in
 		--verify)
 			verifyCompatible $2 $3
 			returnCode=$?
-			shift
-			shift
+			shift 2
 			;;
 	  --bytecount)
 	    byteCount
+	    ;;
+	  --copy)
+	    copy $2 $3 $4 $5
+	    shift 4
 	    ;;
 	esac
 	shift

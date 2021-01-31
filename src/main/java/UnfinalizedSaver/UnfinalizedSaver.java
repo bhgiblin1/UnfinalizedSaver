@@ -7,6 +7,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadFactory;
 
 public class UnfinalizedSaver
 {
@@ -16,14 +19,21 @@ public class UnfinalizedSaver
     TextField saveLoc;
     @FXML
     ProgressIndicator verifyProgressInd;
+    @FXML
+    ProgressIndicator copyProgressInd;
 
-    ProgressIndicator currentStage;
+    int currentStage;
+    List<ProgressIndicator> stageList;
 
     DVDHandler dvdHandler;
 
     @FXML
     public void initialize()
     {
+        stageList = new ArrayList<>();
+        stageList.add(verifyProgressInd);
+        stageList.add(copyProgressInd);
+        currentStage = 0;
     }
 
     @FXML
@@ -39,12 +49,11 @@ public class UnfinalizedSaver
     public void begin()
     {
         dvdHandler = new DVDHandler();
-        dvdHandler.getStageCompletePercent().addListener(((observable, oldValue, newValue) -> updateProgress(newValue.intValue())));
+        dvdHandler.getStageCompletePercent().addListener(((observable, oldValue, newValue) -> updateProgress(newValue.doubleValue())));
         try
         {
-            currentStage = verifyProgressInd;
-            dvdHandler.verifyCompatibleDVD();
-
+            // TODO make this task
+            new Thread(() -> dvdHandler.begin()).start();
         }
         catch (RuntimeException e)
         {
@@ -53,8 +62,10 @@ public class UnfinalizedSaver
         }
     }
 
-    public void updateProgress(int value)
+    public void updateProgress(double value)
     {
-        currentStage.setProgress((double) value / 100);
+        if (value == 0)
+            currentStage++;
+        stageList.get(currentStage).setProgress(value);
     }
 }
