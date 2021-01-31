@@ -46,7 +46,7 @@
          </font>
       </Label>
       <ProgressIndicator fx:id="copyProgressInd" layoutX="276.0" layoutY="185.0" prefHeight="163.0" prefWidth="154.0" progress="0.0" AnchorPane.bottomAnchor="113.0" AnchorPane.leftAnchor="276.0" AnchorPane.rightAnchor="261.0" AnchorPane.topAnchor="185.0" />
-      <ProgressIndicator layoutX="494.0" layoutY="185.0" prefHeight="163.0" prefWidth="154.0" progress="0.0" AnchorPane.bottomAnchor="113.0" AnchorPane.leftAnchor="494.0" AnchorPane.rightAnchor="43.0" AnchorPane.topAnchor="185.0" />
+      <ProgressIndicator fx:id="convertProgressInd" layoutX="494.0" layoutY="185.0" prefHeight="163.0" prefWidth="154.0" progress="0.0" AnchorPane.bottomAnchor="113.0" AnchorPane.leftAnchor="494.0" AnchorPane.rightAnchor="43.0" AnchorPane.topAnchor="185.0" />
       <Label layoutX="297.0" layoutY="361.0" text="Copying Data">
          <font>
             <Font size="16.0" />

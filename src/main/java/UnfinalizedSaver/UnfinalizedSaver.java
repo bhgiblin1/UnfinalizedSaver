@@ -21,6 +21,8 @@ public class UnfinalizedSaver
     ProgressIndicator verifyProgressInd;
     @FXML
     ProgressIndicator copyProgressInd;
+    @FXML
+    ProgressIndicator convertProgressInd;
 
     int currentStage;
     List<ProgressIndicator> stageList;
@@ -33,6 +35,7 @@ public class UnfinalizedSaver
         stageList = new ArrayList<>();
         stageList.add(verifyProgressInd);
         stageList.add(copyProgressInd);
+        stageList.add(convertProgressInd);
         currentStage = 0;
     }
 
@@ -48,6 +51,9 @@ public class UnfinalizedSaver
     @FXML
     public void begin()
     {
+        currentStage = 0;
+        for (var stage : stageList)
+            stage.setProgress(0);
         dvdHandler = new DVDHandler();
         dvdHandler.getStageCompletePercent().addListener(((observable, oldValue, newValue) -> updateProgress(newValue.doubleValue())));
         try

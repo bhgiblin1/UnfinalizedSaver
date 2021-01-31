@@ -16,37 +16,38 @@ public class DVDHandler
     int trackSize = 681376;
     long byteCount = 0;
     Path vobFile;
+    Path mp4File;
 
     SimpleDoubleProperty completePercent;
 
     public DVDHandler()
     {
         completePercent = new SimpleDoubleProperty();
-    }
-
-    public void verifyCompatibleDVD() throws RuntimeException
-    {
-        completePercent.set(.25);
-        execute("/share/UnfinalizedSaver/executor.bsh --verify " + trackStartAddress + " " + trackSize);
-        completePercent.set(.50);
-        getByteCount();
-    }
-
-    public void copyDVD() throws RuntimeException
-    {
         try {
             vobFile = Files.createTempFile(null, ".vob");
-            executeDD("/share/UnfinalizedSaver/executor.bsh --copy " + trackStartAddress + " " + trackSize
-                    + " /dev/sr1 " + vobFile);
+            mp4File = Files.createTempFile(null, ".mp4");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public void verifyCompatibleDVD() throws RuntimeException
+    {
+        completePercent.set(.25);
+        execute("/share/UnfinalizedSaver/executor.bsh --verify " + trackStartAddress + " " + trackSize, false);
+        completePercent.set(.50);
+    }
+
+    public void copyDVD() throws RuntimeException
+    {
+        executeDD("/share/UnfinalizedSaver/executor.bsh --copy " + trackStartAddress + " " + trackSize
+                + " /dev/sr1 " + vobFile);
+    }
+
     private void getByteCount() throws RuntimeException
     {
         completePercent.set(.75);
-        String output = execute("/share/UnfinalizedSaver/executor.bsh --bytecount");
+        String output = execute("/share/UnfinalizedSaver/executor.bsh --bytecount", false);
         byteCount = Long.parseLong(output);
         System.out.println("Byte count = " + byteCount);
         if (byteCount <= 0)
@@ -59,28 +60,37 @@ public class DVDHandler
         verifyCompatibleDVD();
         getByteCount();
         completePercent.set(0);
-        //copyDVD();
+        copyDVD();
         completePercent.set(0);
         convertVOB();
     }
 
     private void convertVOB()
     {
-
+        execute("/share/UnfinalizedSaver/executor.bsh --convert " + vobFile + " " + mp4File, true);
     }
 
-
-    private String execute(String command)
+    private String execute(String command, boolean vobConvert)
     {
         StringBuilder stringBuilder = new StringBuilder();
         try
         {
             Process process = Runtime.getRuntime().exec(command);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line ;
+            String line;
             while ((line = bufferedReader.readLine()) != null)
             {
-                stringBuilder.append(line);
+                if (vobConvert)
+                {
+                    System.out.println(line);
+                    var output = line.split(" ");
+                    if (output.length > 6)
+                        updateVOBPercent(line.split(" ")[5]);
+                }
+                else
+                {
+                    stringBuilder.append(line);
+                }
 //                System.out.println(line);
             }
             process.waitFor();
@@ -106,7 +116,10 @@ public class DVDHandler
             {
                 updateDDPercent(line.split(" ")[0]);
             }
-        } catch (IOException e) {
+            process.waitFor();
+            if (process.exitValue() != 0)
+                throw new RuntimeException();
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -121,6 +134,17 @@ public class DVDHandler
         catch (NumberFormatException e)
         {
             System.out.println("Error parsing bytes read");
+        }
+    }
+
+    private void updateVOBPercent(String percent)
+    {
+        try
+        {
+            double percentComplete = Double.parseDouble(percent);
+            completePercent.set(percentComplete / 100);
+        } catch (NumberFormatException e) {
+            System.out.println("Error parsing HandBrake % complete");
         }
     }
 

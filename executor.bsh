@@ -40,6 +40,11 @@ function byteCount {
 function copy {
   #dd bs=2048 skip=$1 count=$2 if=$3 of=$4
   dd if=/root/dvds/dvd1/track4.vob of=/dev/null bs=1 status=progress
+  return $?
+}
+
+function convert {
+  HandBrakeCLI -i /dev/shm/track4.vob -E copy:ac3 -o /dev/shm/fulldisk.mkv 2> >(grep -i "Encoding: task")
 }
 
 returnCode=0
@@ -55,7 +60,12 @@ while [ -n "$1" ]; do
 	    ;;
 	  --copy)
 	    copy $2 $3 $4 $5
+	    returnCode=$?
 	    shift 4
+	    ;;
+	  --convert)
+	    convert $2 $3
+	    shift 2
 	    ;;
 	esac
 	shift
