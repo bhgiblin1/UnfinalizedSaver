@@ -5,12 +5,17 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,13 +87,28 @@ public class UnfinalizedSaver
             }
         };
         task.setOnSucceeded(event -> displayMedia(dvdHandler));
+//        displayMedia(dvdHandler);
 
         new Thread(task).start();
     }
 
     private void displayMedia(DVDHandler dvdHandler)
     {
-        System.out.println("displaying media");
+        Parent root;
+        try {
+            MediaViewer mediaViewer = new MediaViewer(dvdHandler.getmp4File(), saveLoc.getText());
+//            MediaViewer mediaViewer = new MediaViewer(Paths.get("/dev/shm/fulldisk.mp4"), saveLoc.getText());
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("mediaViewer.fxml"));
+            loader.setController(mediaViewer);
+            root = loader.load();
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setTitle("Media Viewer");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void updateProgress(double value)

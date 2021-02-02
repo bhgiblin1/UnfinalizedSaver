@@ -144,4 +144,9 @@ public class DVDHandler
     {
         return completePercent;
     }
+
+    public Path getmp4File()
+    {
+        return mp4File;
+    }
 }
