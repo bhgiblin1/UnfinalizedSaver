@@ -89,6 +89,7 @@ public class DVDHandler
             String line;
             while ((line = bufferedReader.readLine()) != null)
             {
+                System.out.println(line);
                 if (handbrakeCommand)
                 {
                     var output = line.split(" ");
@@ -103,7 +104,6 @@ public class DVDHandler
                 {
                     stringBuilder.append(line);
                 }
-//               System.out.println(line);
             }
             process.waitFor();
             if (process.exitValue() != 0)

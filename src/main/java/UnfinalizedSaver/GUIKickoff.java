@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 
 public class GUIKickoff extends Application
 {
@@ -16,6 +18,14 @@ public class GUIKickoff extends Application
         Scene scene = new Scene(root);
         stage.setTitle("Unfinalized Saver");
         stage.setScene(scene);
+        stage.setOnCloseRequest(x -> {
+            try {
+                Runtime.getRuntime().exec("/share/UnfinalizedSaver/executor.bsh --cleanup");
+                System.out.println("exit");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         stage.show();
     }
 

@@ -13,8 +13,8 @@
 
 function verifyCompatible {
 	returnCode=1
-  #dvd+rw-mediainfo /dev/sr1 | grep -A 7 "\[#4\]"
-  trackInfo=$(cat sampleOutput.txt)
+  trackInfo=$(dvd+rw-mediainfo /dev/sr1 | grep -A 7 "\[#4\]")
+  #trackInfo=$(cat sampleOutput.txt)
   startAddress=$(echo "$trackInfo" | awk -F':|*' 'NR==3 {print $2}')
   trackSize=$(echo "$trackInfo" | awk -F':|*' 'NR==6 {print $2}')
 
@@ -28,8 +28,8 @@ function verifyCompatible {
 }
 
 function byteCount {
-    #dvd+rw-mediainfo /dev/sr1 | grep -A 7 "\[#4\]"
-  trackInfo=$(cat sampleOutput.txt)
+  trackInfo=$(dvd+rw-mediainfo /dev/sr1 | grep -A 7 "\[#4\]")
+  #trackInfo=$(cat sampleOutput.txt)
   startAddress=$(echo "$trackInfo" | awk -F':|*' 'NR==3 {print $2}')
   lastRecordedAddress=$(echo "$trackInfo" | awk -F':|*' 'NR==7 {print $2}')
 
@@ -38,14 +38,21 @@ function byteCount {
 }
 
 function copy {
-  #dd bs=2048 skip=$1 count=$2 if=$3 of=$4
-  dd if=/root/dvds/dvd1/track4.vob of=/dev/null bs=1 status=progress
+  dd bs=2048 skip=$1 count=$2 if=$3 of=$4 status=progress
+  #dd if=/root/dvds/dvd1/track4.vob of=/dev/null bs=1 status=progress
   return $?
 }
 
 function convert {
-  #HandBrakeCLI -i $1 -E copy:ac3 -o $2 2> >(grep -i "Encoding: task")
-  HandBrakeCLI -i /dev/shm/track4.vob -E copy:ac3 -o /dev/shm/fulldisk.mkv 2> >(grep -i "Encoding: task")
+  HandBrakeCLI -i $1 -E copy:ac3 -o $2 2> >(grep -i "Encoding: task")
+  #HandBrakeCLI -i /dev/shm/track4.vob -E copy:ac3 -o /dev/shm/fulldisk.mkv 2> >(grep -i "Encoding: task")
+}
+
+# if user exits in the middle, made sure everything closes out
+function cleanup {
+  pkill dvd+rw-mediainfo
+  pkill dd
+  pkill HandBrakeCLI
 }
 
 returnCode=0
@@ -67,6 +74,9 @@ while [ -n "$1" ]; do
 	  --convert)
 	    convert $2 $3
 	    shift 2
+	    ;;
+	  --cleanup)
+	    cleanup
 	    ;;
 	esac
 	shift

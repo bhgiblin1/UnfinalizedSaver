@@ -1,10 +1,7 @@
 package UnfinalizedSaver;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -70,6 +67,15 @@ public class MediaViewer
     @FXML
     public void done()
     {
+        if (fileName.getText().isEmpty())
+        {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Info");
+            alert.setHeaderText("DVD Name can't be empty");
+            alert.showAndWait();
+            return;
+        }
+
         Path destination = Paths.get(outputDir + "/" + fileName.getText()+ ".mp4");
         try {
             Files.copy(videoFile, destination, StandardCopyOption.REPLACE_EXISTING);
