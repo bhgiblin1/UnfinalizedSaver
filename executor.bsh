@@ -44,7 +44,7 @@ function copy {
 }
 
 function convert {
-  HandBrakeCLI -i $1 -E copy:ac3 -o $2 2> >(grep -i "Encoding: task")
+  HandBrakeCLI -i $1 -E copy:aac -o $2 2> >(grep -i "Encoding: task")
   #HandBrakeCLI -i /dev/shm/track4.vob -E copy:ac3 -o /dev/shm/fulldisk.mkv 2> >(grep -i "Encoding: task")
 }
 
