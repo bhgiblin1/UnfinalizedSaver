@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
@@ -31,6 +32,8 @@ public class UnfinalizedSaver
     ProgressIndicator copyProgressInd;
     @FXML
     ProgressIndicator convertProgressInd;
+    @FXML
+    Button beginBtn;
 
     int currentStage;
     List<ProgressIndicator> stageList;
@@ -59,9 +62,13 @@ public class UnfinalizedSaver
     @FXML
     public void begin()
     {
+        beginBtn.setDisable(true);
         currentStage = 0;
         for (var stage : stageList)
+        {
             stage.setProgress(0);
+            stage.setStyle("");
+        }
         dvdHandler = new DVDHandler();
         dvdHandler.getStageCompletePercent().addListener(((observable, oldValue, newValue) -> updateProgress(newValue.doubleValue())));
 
@@ -86,7 +93,11 @@ public class UnfinalizedSaver
                 return null;
             }
         };
-        task.setOnSucceeded(event -> displayMedia(dvdHandler));
+        task.setOnSucceeded(event -> {
+            displayMedia(dvdHandler);
+            beginBtn.setDisable(false);
+        });
+        task.setOnFailed(event -> beginBtn.setDisable(false));
 //        displayMedia(dvdHandler);
 
         new Thread(task).start();

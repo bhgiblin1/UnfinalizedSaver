@@ -56,10 +56,3 @@ tasks.jlink.doLast {
         into JLINK_DIR + "/image/bin"
     }
 }
-
-jar.doLast{
-    copy {
-        from "executor.bsh"
-        into "build/libs"
-    }
-}

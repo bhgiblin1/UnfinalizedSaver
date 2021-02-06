@@ -90,7 +90,7 @@ public class MediaViewer
 
         Path destination = Paths.get(outputDir + "/" + fileName.getText()+ ".mp4");
         try {
-            Files.copy(videoFile, destination, StandardCopyOption.REPLACE_EXISTING);
+            Files.move(videoFile, destination, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -57,31 +57,29 @@ function cleanup {
 
 returnCode=0
 while [ -n "$1" ]; do
-	case $1 in
-		--verify)
-			verifyCompatible $2 $3
-			returnCode=$?
-			shift 2
-			;;
-	  --bytecount)
-	    byteCount
-	    ;;
-	  --copy)
-	    copy $2 $3 $4 $5
-	    returnCode=$?
-	    shift 4
-	    ;;
-	  --convert)
-	    convert $2 $3
-	    shift 2
-	    ;;
-	  --cleanup)
-	    cleanup
-	    ;;
-	esac
-	shift
+  case $1 in
+    --verify)
+      verifyCompatible $2 $3
+      returnCode=$?
+      shift 2
+      ;;
+    --bytecount)
+      byteCount
+      ;;
+    --copy)
+      copy $2 $3 $4 $5
+      returnCode=$?
+      shift 4
+      ;;
+    --convert)
+      convert $2 $3
+      shift 2
+      ;;
+    --cleanup)
+      cleanup
+    ;;
+  esac
+  shift
 done
 
 exit $returnCode
-
-

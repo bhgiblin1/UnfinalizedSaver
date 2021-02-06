@@ -60,6 +60,11 @@ public class DVDHandler
     {
         execute("./executor.bsh --convert " + vobFile + " " + mp4File,
                 false,true);
+        try {
+            Files.delete(vobFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void begin()
