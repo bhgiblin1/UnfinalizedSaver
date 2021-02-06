@@ -20,8 +20,7 @@ public class GUIKickoff extends Application
         stage.setScene(scene);
         stage.setOnCloseRequest(x -> {
             try {
-                Runtime.getRuntime().exec("/share/UnfinalizedSaver/executor.bsh --cleanup");
-                System.out.println("exit");
+                Runtime.getRuntime().exec("./executor.bsh --cleanup");
             } catch (IOException e) {
                 e.printStackTrace();
             }

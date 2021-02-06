@@ -34,21 +34,21 @@ public class DVDHandler
     public void verifyCompatibleDVD() throws RuntimeException
     {
         completePercent.set(.25);
-        execute("/share/UnfinalizedSaver/executor.bsh --verify " + trackStartAddress + " " + trackSize,
+        execute("./executor.bsh --verify " + trackStartAddress + " " + trackSize,
                 false, false);
         completePercent.set(.50);
     }
 
     public void copyDVD() throws RuntimeException
     {
-        execute("/share/UnfinalizedSaver/executor.bsh --copy " + trackStartAddress + " " + trackSize
+        execute("./executor.bsh --copy " + trackStartAddress + " " + trackSize
                 + " /dev/sr1 " + vobFile, true, false);
     }
 
     private void getByteCount() throws RuntimeException
     {
         completePercent.set(.75);
-        String output = execute("/share/UnfinalizedSaver/executor.bsh --bytecount", false, false);
+        String output = execute("./executor.bsh --bytecount", false, false);
         byteCount = Long.parseLong(output);
 //        System.out.println("Byte count = " + byteCount);
         if (byteCount <= 0)
@@ -58,7 +58,7 @@ public class DVDHandler
 
     private void convertVOB()
     {
-        execute("/share/UnfinalizedSaver/executor.bsh --convert " + vobFile + " " + mp4File,
+        execute("./executor.bsh --convert " + vobFile + " " + mp4File,
                 false,true);
     }
 
