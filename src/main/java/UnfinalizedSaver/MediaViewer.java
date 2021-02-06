@@ -26,6 +26,8 @@ public class MediaViewer
 
     Path videoFile;
     String outputDir;
+    MediaPlayer mediaPlayer;
+    volatile boolean sliderChanging;
 
     public MediaViewer(Path videoFile, String outputDir)
     {
@@ -40,21 +42,26 @@ public class MediaViewer
         Slider timeSlider = new Slider();
         Label duration = new Label();
         Label timestamp = new Label();
-        MediaPlayer mediaPlayer = new MediaPlayer(new Media("file://" + videoFile.toString()));
+        mediaPlayer = new MediaPlayer(new Media("file://" + videoFile.toString()));
         MediaView mediaViewer = new MediaView(mediaPlayer);
 
         HBox.setHgrow(timeSlider, Priority.ALWAYS);
         controls.setMaxWidth(videoVBox.getMaxWidth());
         controls.setMinWidth(videoVBox.getMinWidth());
         mediaViewer.fitWidthProperty().bind(videoVBox.widthProperty());
+        sliderChanging = false;
 
         mediaPlayer.setOnReady(() -> {
             duration.setText(String.format("%.2f", mediaPlayer.getTotalDuration().toMinutes()));
         });
         timeSlider.valueProperty().addListener(x -> {
-            mediaPlayer.seek(mediaPlayer.getTotalDuration().multiply(timeSlider.getValue() / 100.0));
+            if (!sliderChanging)
+                mediaPlayer.seek(mediaPlayer.getTotalDuration().multiply(timeSlider.getValue() / 100.0));
         });
         mediaPlayer.currentTimeProperty().addListener(x -> {
+            sliderChanging = true;
+            timeSlider.setValue((mediaPlayer.getCurrentTime().toSeconds() / mediaPlayer.getTotalDuration().toSeconds()) * 100);
+            sliderChanging = false;
             timestamp.setText(String.format("%.2f", mediaPlayer.getCurrentTime().toMinutes()) + "/");
         });
 
@@ -62,6 +69,11 @@ public class MediaViewer
         controls.getChildren().addAll(timeSlider, timestamp, duration);
 
         mediaPlayer.play();
+    }
+
+    public void cleanup()
+    {
+        mediaPlayer.stop();
     }
 
     @FXML
@@ -82,6 +94,7 @@ public class MediaViewer
         } catch (IOException e) {
             e.printStackTrace();
         }
+        cleanup();
         ((Stage) videoVBox.getScene().getWindow()).close();
     }
 }

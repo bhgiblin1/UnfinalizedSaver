@@ -105,6 +105,7 @@ public class UnfinalizedSaver
             Scene scene = new Scene(root);
             stage.setTitle("Media Viewer");
             stage.setScene(scene);
+            stage.setOnCloseRequest(x -> mediaViewer.cleanup());
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -113,7 +114,9 @@ public class UnfinalizedSaver
 
     public void updateProgress(double value)
     {
-        if (value == 0)
+        if (value == 1)
+            stageList.get(currentStage).setStyle("-fx-progress-color: green;");
+        else if (value == 0)
             currentStage++;
         stageList.get(currentStage).setProgress(value);
     }
