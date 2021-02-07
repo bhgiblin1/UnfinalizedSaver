@@ -38,6 +38,7 @@ function byteCount {
 }
 
 function copy {
+  # add conv=sync,noerror to ignore IO errors 
   dd bs=2048 skip=$1 count=$2 if=$3 of=$4 status=progress
   #dd if=/root/dvds/dvd1/track4.vob of=/dev/null bs=1 status=progress
   return $?
